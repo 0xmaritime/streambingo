@@ -29,12 +29,12 @@ const BingoGrid: React.FC<BingoGridProps> = ({
       {cells.map((_, index) => {
         const isCenter = index === CENTER_INDEX;
         const isMarked = markedIndices.includes(index) || (isCenter && mode === 'play');
-        const content = isCenter ? "FREE SPACE" : items[index < CENTER_INDEX ? index : index - 1] || "";
+        const content = isCenter ? "БЕСПЛАТНЫЙ ПУНКТ" : items[index < CENTER_INDEX ? index : index - 1] || "";
 
         if (mode === 'edit' && !isCenter) {
           return (
             <div key={index} className="aspect-square relative group">
-               <textarea
+              <textarea
                 value={content}
                 onChange={(e) => onCellChange && onCellChange(index < CENTER_INDEX ? index : index - 1, e.target.value)}
                 className={`w-full h-full p-2 text-xs sm:text-sm text-center resize-none rounded-lg
@@ -56,17 +56,17 @@ const BingoGrid: React.FC<BingoGridProps> = ({
             disabled={mode === 'view' || (isCenter && mode === 'play')}
             className={`
               aspect-square rounded-lg flex items-center justify-center p-1 sm:p-2 text-center select-none transition-all duration-300
-              ${isCenter ? 'font-black text-yellow-400 border-2 border-yellow-500/50 bg-yellow-900/20' : ''}
+              ${isCenter ? 'font-black text-yellow-400 border-2 border-yellow-500/50 bg-yellow-900/20 text-[10px] sm:text-xs' : ''}
               ${isMarked && !isCenter ? `${tileMarkedClass} scale-[0.98] text-white font-bold` : `${tileBgClass} hover:bg-white/10`}
               ${mode === 'play' && !isMarked && !isCenter ? 'cursor-pointer active:scale-95' : 'cursor-default'}
               shadow-lg relative overflow-hidden
             `}
           >
-            <span className={`text-[10px] sm:text-xs md:text-sm leading-tight break-words line-clamp-4 ${isMarked ? 'opacity-100' : 'opacity-80'}`}>
+            <span className={`${isCenter ? 'text-[10px] sm:text-xs' : 'text-[10px] sm:text-xs md:text-sm'} leading-tight break-words line-clamp-4 ${isMarked ? 'opacity-100' : 'opacity-80'}`}>
               {content}
             </span>
             {isMarked && (
-               <div className="absolute inset-0 bg-white/10 animate-pulse pointer-events-none" />
+              <div className="absolute inset-0 bg-white/10 animate-pulse pointer-events-none" />
             )}
           </button>
         );
