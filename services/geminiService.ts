@@ -1,15 +1,27 @@
 import { GoogleGenAI, Type } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+let ai: GoogleGenAI | null = null;
+
+const getAI = () => {
+  if (!ai) {
+    const apiKey = process.env.API_KEY || process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("Gemini API key is not configured");
+    }
+    ai = new GoogleGenAI({ apiKey });
+  }
+  return ai;
+};
 
 export const generateBingoItems = async (topic: string): Promise<string[]> => {
   try {
+    const aiInstance = getAI();
     const prompt = `Generate a list of exactly 24 short, punchy, and fun bingo square items for the topic: "${topic}". 
     The items should be tropes, predictions, or common occurrences related to the topic. 
     Keep each item under 50 characters. 
     Do not include a free space.`;
 
-    const response = await ai.models.generateContent({
+    const response = await aiInstance.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: prompt,
       config: {
